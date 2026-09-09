@@ -21,3 +21,7 @@ sale = {
 total_sale_amount = sale["quantity"] * sale["price"]
 
 print("Total sale", total_sale_amount)
+print("product:",sale["product"])
+print("quantity:",sale["quantity"])
+print("price:",sale["price"])
+
