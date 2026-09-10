@@ -5,17 +5,32 @@ while add_more == "yes":
 
     product = input(" Enter product: ")
 
-    quantity = int(input("Enter quantity: "))
+    valid_quantity = False
 
-    price = int(input("Enter price: "))
+    while not valid_quantity:
 
+        try:
+            quantity = int(input("Enter quantity: "))
+            valid_quantity = True
+
+        except:
+            print("enter a valid number")
+
+    valid_price = False
+
+    while not valid_price:
+        try:
+            price = int(input("Enter price: "))
+            valid_price = True
+
+        except:
+            print("enter a valid number")    
 
     sale = {
         "product": product,
         "quantity": quantity,
         "price": price
     }
-
     sales.append(sale)
 
     add_more = input("Do you want to add another sale? yes/no: ")
