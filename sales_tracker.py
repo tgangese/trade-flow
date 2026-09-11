@@ -1,35 +1,26 @@
+def get_positive_number(prompt):
+    valid_number = False
+    while not valid_number:
+        try:
+            number = int(input(prompt))
+            if number > 0:
+                valid_number = True
+                return number
+            else:
+                print("Number must be greater than zero.")
+        except ValueError:
+            print("Please enter a valid number.")
+
 sales = []
 add_more = "yes"
 
 while add_more == "yes":
-
     product = input("Enter product: ")
 
-    # Quantity validation
-    valid_quantity = False
-    while not valid_quantity:
-        try:
-            quantity = int(input("Enter quantity: "))
-            if quantity > 0:
-                valid_quantity = True
-            else:
-                print("Quantity must be greater than zero.")
-        except ValueError:
-            print("Please enter a valid number for quantity.")
+    # Use the function for quantity and price
+    quantity = get_positive_number("Enter quantity: ")
+    price = get_positive_number("Enter price: ")
 
-    # Price validation
-    valid_price = False
-    while not valid_price:
-        try:
-            price = int(input("Enter price: "))
-            if price > 0:
-                valid_price = True
-            else:
-                print("Price must be greater than zero.")
-        except ValueError:
-            print("Please enter a valid number for price.")
-
-    # Create sale dictionary
     sale = {
         "product": product,
         "quantity": quantity,
