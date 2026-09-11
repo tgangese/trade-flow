@@ -13,7 +13,7 @@ while add_more == "yes":
             quantity = int(input("Enter quantity: "))
             valid_quantity = True
 
-        except:
+        except ValueError:
             print("enter a valid number")
 
     valid_price = False
@@ -23,7 +23,7 @@ while add_more == "yes":
             price = int(input("Enter price: "))
             valid_price = True
 
-        except:
+        except ValueError:
             print("enter a valid number")    
 
     sale = {
