@@ -33,7 +33,10 @@ while add_more == "yes":
     }
     sales.append(sale)
 
-    add_more = input("Do you want to add another sale? yes/no: ")
+    add_more = ""
+
+    while add_more != "yes" and add_more != "no":
+        add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
 
 # Calculate total revenue
 total_revenue = 0
