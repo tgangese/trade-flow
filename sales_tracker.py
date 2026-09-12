@@ -1,3 +1,4 @@
+# Function to get a positive number (used for quantity and price)
 def get_positive_number(prompt):
     valid_number = False
     while not valid_number:
@@ -11,21 +12,30 @@ def get_positive_number(prompt):
         except ValueError:
             print("Please enter a valid number.")
 
+# Function to get a valid product name (non-empty, normalized)
+def get_product(prompt):
+    valid_product = False
+    while not valid_product:
+        product = input(prompt).strip().capitalize()
+        if product == "":
+            print("Product cannot be empty.")
+        else:
+            valid_product = True
+    return product
+
+# List to store sales
 sales = []
 add_more = "yes"
 
+# Main loop to add sales
 while add_more == "yes":
-    product = ""
-    while product == "":
-        product = input("Enter product: ")
-        product = product.strip().capitalize()
-        if product == "":
-            print("Product cannot be empty.")
 
-    # Use the function for quantity and price
+    # Get product, quantity, and price using functions
+    product = get_product("Enter product: ")
     quantity = get_positive_number("Enter quantity: ")
     price = get_positive_number("Enter price: ")
 
+    # Create sale dictionary and add to list
     sale = {
         "product": product,
         "quantity": quantity,
@@ -33,8 +43,8 @@ while add_more == "yes":
     }
     sales.append(sale)
 
+    # Ask if user wants to add another sale
     add_more = ""
-
     while add_more != "yes" and add_more != "no":
         add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
 
@@ -44,4 +54,5 @@ for sale in sales:
     total = sale["quantity"] * sale["price"]
     total_revenue += total
 
+# Display total revenue
 print("Total revenue:", total_revenue)
