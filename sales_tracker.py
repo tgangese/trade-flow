@@ -15,7 +15,12 @@ sales = []
 add_more = "yes"
 
 while add_more == "yes":
-    product = input("Enter product: ")
+    product = ""
+    while product == "":
+        product = input("Enter product: ")
+        product = product.strip()
+        if product == "":
+            print("Product cannot be empty.")
 
     # Use the function for quantity and price
     quantity = get_positive_number("Enter quantity: ")
