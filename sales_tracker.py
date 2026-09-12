@@ -18,7 +18,7 @@ while add_more == "yes":
     product = ""
     while product == "":
         product = input("Enter product: ")
-        product = product.strip()
+        product = product.strip().capitalize()
         if product == "":
             print("Product cannot be empty.")
 
