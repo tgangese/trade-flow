@@ -34,6 +34,7 @@ while add_more == "yes":
     product = get_product("Enter product: ")
     quantity = get_positive_number("Enter quantity: ")
     price = get_positive_number("Enter price: ")
+
     # Create sale dictionary and add to list
     sale = {
         "product": product,
@@ -47,13 +48,23 @@ while add_more == "yes":
     while add_more != "yes" and add_more != "no":
         add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
 
-# Calculate total revenue
+# Function to calculate total revenue
 def calculate_total_revenue(sales):
     total_revenue = 0
     for sale in sales:
         total = sale["quantity"] * sale["price"]
         total_revenue += total
     return total_revenue
+
+# Function to display each sale with labels
+def display_sales(sales):
+    print("Sales:")
+    for sale in sales:
+        total = sale["quantity"] * sale["price"]
+        print(sale["product"], "— Quantity:", sale["quantity"], "— Price:", sale["price"], "— Total:", total)
+
+# Display all sales
+display_sales(sales)
 
 # Function call to calculate and store total revenue
 total_revenue = calculate_total_revenue(sales)
