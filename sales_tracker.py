@@ -33,7 +33,6 @@ add_more = "yes"
 
 # Main loop to add sales
 while add_more == "yes":
-
     # Get product, quantity, and price using functions
     product = get_product("Enter product: ")
     quantity = get_positive_number("Enter quantity: ")
@@ -70,13 +69,33 @@ def display_sales(sales):
 # Display all sales
 display_sales(sales)
 
-# Function call to calculate and store total revenue
-total_revenue = calculate_total_revenue(sales)
-
-# Display total revenue
-print("Total revenue:", total_revenue)
-
 # Save updated sales back to sales.json
 sales_json = json.dumps(sales)
 with open("sales.json", "w") as file:
     file.write(sales_json)
+
+# Function to generate sales report
+def sales_report(sales):
+    total_sales = len(sales)
+    print("Total sales:", total_sales)
+
+    total_revenue = calculate_total_revenue(sales)
+    max_sale = 0
+    max_product = ""
+
+    for sale in sales:
+        total = sale["quantity"] * sale["price"]
+        if total > max_sale:
+            max_sale = total
+            max_product = sale["product"]
+
+    print("Total revenue:", total_revenue)
+    print("Highest sale:", max_product, "—", max_sale)
+    if total_sales > 0:
+        average_sale = total_revenue / total_sales
+        print("Average sale:", round(average_sale, 2))
+    else:
+        print("Average sale: No sales")
+
+# Call the report function
+sales_report(sales)
