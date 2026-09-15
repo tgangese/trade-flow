@@ -1,3 +1,5 @@
+import json
+
 # Function to get a positive number (used for quantity and price)
 def get_positive_number(prompt):
     valid_number = False
@@ -23,8 +25,10 @@ def get_product(prompt):
             valid_product = True
     return product
 
-# List to store sales
-sales = []
+# Load existing sales from sales.json
+with open("sales.json", "r") as file:
+    sales = json.load(file)
+
 add_more = "yes"
 
 # Main loop to add sales
@@ -71,3 +75,8 @@ total_revenue = calculate_total_revenue(sales)
 
 # Display total revenue
 print("Total revenue:", total_revenue)
+
+# Save updated sales back to sales.json
+sales_json = json.dumps(sales)
+with open("sales.json", "w") as file:
+    file.write(sales_json)
