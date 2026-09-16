@@ -91,11 +91,26 @@ def sales_report(sales):
 
     print("Total revenue:", total_revenue)
     print("Highest sale:", max_product, "—", max_sale)
+
     if total_sales > 0:
         average_sale = total_revenue / total_sales
         print("Average sale:", round(average_sale, 2))
     else:
         print("Average sale: No sales")
+
+    if total_sales > 0:
+        min_sale = sales[0]["quantity"] * sales[0]["price"]
+        min_product = sales[0]["product"]
+
+        for sale in sales:
+            total = sale["quantity"] * sale["price"]
+            if total < min_sale:
+                min_sale = total
+                min_product = sale["product"]
+
+        print("Lowest sale:", min_product, "—", min_sale)
+    else:
+        print("Lowest sale: No sales")
 
 # Call the report function
 sales_report(sales)
