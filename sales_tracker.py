@@ -25,32 +25,6 @@ def get_product(prompt):
             valid_product = True
     return product
 
-# Load existing sales from sales.json
-with open("sales.json", "r") as file:
-    sales = json.load(file)
-
-add_more = "yes"
-
-# Main loop to add sales
-while add_more == "yes":
-    # Get product, quantity, and price using functions
-    product = get_product("Enter product: ")
-    quantity = get_positive_number("Enter quantity: ")
-    price = get_positive_number("Enter price: ")
-
-    # Create sale dictionary and add to list
-    sale = {
-        "product": product,
-        "quantity": quantity,
-        "price": price
-    }
-    sales.append(sale)
-
-    # Ask if user wants to add another sale
-    add_more = ""
-    while add_more != "yes" and add_more != "no":
-        add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
-
 # Function to calculate total revenue
 def calculate_total_revenue(sales):
     total_revenue = 0
@@ -66,13 +40,16 @@ def display_sales(sales):
         total = sale["quantity"] * sale["price"]
         print(sale["product"], "— Quantity:", sale["quantity"], "— Price:", sale["price"], "— Total:", total)
 
-# Display all sales
-display_sales(sales)
-
-# Save updated sales back to sales.json
-sales_json = json.dumps(sales)
-with open("sales.json", "w") as file:
-    file.write(sales_json)
+# Function to calculate sales per product
+def calculate_sales_per_product(sales):
+    product_sales = {}
+    for sale in sales:
+        total = sale["quantity"] * sale["price"]
+        if sale["product"] not in product_sales:
+            product_sales[sale["product"]] = total
+        else:
+            product_sales[sale["product"]] += total
+    return product_sales
 
 # Function to generate sales report
 def sales_report(sales):
@@ -111,6 +88,43 @@ def sales_report(sales):
         print("Lowest sale:", min_product, "—", min_sale)
     else:
         print("Lowest sale: No sales")
+
+    # New feature: sales per product
+    product_sales = calculate_sales_per_product(sales)
+    print("Sales per product:")
+    for product, total in product_sales.items():
+        print(product, "—", total)
+
+# Load existing sales from sales.json
+with open("sales.json", "r") as file:
+    sales = json.load(file)
+
+add_more = "yes"
+
+# Main loop to add sales
+while add_more == "yes":
+    product = get_product("Enter product: ")
+    quantity = get_positive_number("Enter quantity: ")
+    price = get_positive_number("Enter price: ")
+
+    sale = {
+        "product": product,
+        "quantity": quantity,
+        "price": price
+    }
+    sales.append(sale)
+
+    add_more = ""
+    while add_more != "yes" and add_more != "no":
+        add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
+
+# Display all sales
+display_sales(sales)
+
+# Save updated sales back to sales.json
+sales_json = json.dumps(sales)
+with open("sales.json", "w") as file:
+    file.write(sales_json)
 
 # Call the report function
 sales_report(sales)
