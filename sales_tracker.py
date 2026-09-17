@@ -91,10 +91,14 @@ def sales_report(sales):
 
     # New feature: sales per product
     product_sales = calculate_sales_per_product(sales)
-    print("Sales per product:")
-    for product, total in product_sales.items():
-        print(product, "—", total)
 
+    if total_revenue > 0:
+        print("Sales per product:")
+        for product, total in product_sales.items():
+            percentage = total / total_revenue * 100
+            print(product, "—", total, f"({round(percentage, 2)}%)")
+    else:
+        print("Sales per product: No revenue")
 # Load existing sales from sales.json
 with open("sales.json", "r") as file:
     sales = json.load(file)
