@@ -60,6 +60,16 @@ def calculate_today_revenue(sales):
             total_revenue += total
 
     return total_revenue
+
+
+def calculate_today_sales(sales):
+    today_sales = 0
+    today = date.today().isoformat()
+
+    for sale in sales:
+        if sale["date"] == today:
+            today_sales += 1
+    return today_sales
 # Function to generate sales report
 def sales_report(sales):
     total_sales = len(sales)
@@ -67,6 +77,8 @@ def sales_report(sales):
 
     total_revenue = calculate_total_revenue(sales)
     today_revenue = calculate_today_revenue(sales)
+    today_sales = calculate_today_sales(sales)
+
     max_sale = 0
     max_product = ""
 
@@ -78,6 +90,7 @@ def sales_report(sales):
 
     print("Total revenue:", total_revenue)
     print("Today's revenue:", today_revenue)
+    print("Today's sales:", today_sales)
     print("Highest sale:", max_product, "—", max_sale)
 
     if total_sales > 0:
