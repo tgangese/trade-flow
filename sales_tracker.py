@@ -1,5 +1,5 @@
 import json
-
+from datetime import date
 # Function to get a positive number (used for quantity and price)
 def get_positive_number(prompt):
     valid_number = False
@@ -38,8 +38,7 @@ def display_sales(sales):
     print("Sales:")
     for sale in sales:
         total = sale["quantity"] * sale["price"]
-        print(sale["product"], "— Quantity:", sale["quantity"], "— Price:", sale["price"], "— Total:", total)
-
+        print(sale["product"], "— Quantity:", sale["quantity"], "— Price:", sale["price"], "— Total:", total, "— Date:", sale["date"])
 # Function to calculate sales per product
 def calculate_sales_per_product(sales):
     product_sales = {}
@@ -103,6 +102,10 @@ def sales_report(sales):
 with open("sales.json", "r") as file:
     sales = json.load(file)
 
+for sale in sales:
+    if "date" not in sale:
+        sale["date"] = date.today().isoformat()
+
 add_more = "yes"
 
 # Main loop to add sales
@@ -114,7 +117,8 @@ while add_more == "yes":
     sale = {
         "product": product,
         "quantity": quantity,
-        "price": price
+        "price": price,
+        "date": date.today().isoformat()
     }
     sales.append(sale)
 
