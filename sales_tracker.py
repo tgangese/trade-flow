@@ -39,6 +39,7 @@ def display_sales(sales):
     for sale in sales:
         total = sale["quantity"] * sale["price"]
         print(sale["product"], "— Quantity:", sale["quantity"], "— Price:", sale["price"], "— Total:", total, "— Date:", sale["date"])
+
 # Function to calculate sales per product
 def calculate_sales_per_product(sales):
     product_sales = {}
@@ -61,7 +62,6 @@ def calculate_today_revenue(sales):
 
     return total_revenue
 
-
 def calculate_today_sales(sales):
     today_sales = 0
     today = date.today().isoformat()
@@ -70,6 +70,15 @@ def calculate_today_sales(sales):
         if sale["date"] == today:
             today_sales += 1
     return today_sales
+def calculate_date_revenue(sales, target_date):
+    total_revenue = 0
+    for sale in sales:
+        if sale["date"] == target_date:
+            total = sale["quantity"] * sale["price"]
+            total_revenue += total
+    return total_revenue
+    
+
 # Function to generate sales report
 def sales_report(sales):
     total_sales = len(sales)
@@ -78,6 +87,9 @@ def sales_report(sales):
     total_revenue = calculate_total_revenue(sales)
     today_revenue = calculate_today_revenue(sales)
     today_sales = calculate_today_sales(sales)
+
+    target_date = input("Enter date (YYYY-MM-DD): ")
+    date_revenue = calculate_date_revenue(sales, target_date)
 
     max_sale = 0
     max_product = ""
@@ -91,6 +103,7 @@ def sales_report(sales):
     print("Total revenue:", total_revenue)
     print("Today's revenue:", today_revenue)
     print("Today's sales:", today_sales)
+    print("Revenue for", target_date, ":", date_revenue)
     print("Highest sale:", max_product, "—", max_sale)
 
     if total_sales > 0:
