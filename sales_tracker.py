@@ -1,5 +1,6 @@
 import json
 from datetime import date
+
 # Function to get a positive number (used for quantity and price)
 def get_positive_number(prompt):
     valid_number = False
@@ -51,6 +52,15 @@ def calculate_sales_per_product(sales):
             product_sales[sale["product"]] += total
     return product_sales
 
+def find_sales_by_product(sales, target_product):
+    matching_sales = []
+
+    for sale in sales:
+        if sale["product"] == target_product:
+            matching_sales.append(sale)
+
+    return matching_sales
+
 def calculate_today_revenue(sales):
     total_revenue = 0
     today = date.today().isoformat()
@@ -70,6 +80,7 @@ def calculate_today_sales(sales):
         if sale["date"] == today:
             today_sales += 1
     return today_sales
+
 def calculate_date_revenue(sales, target_date):
     total_revenue = 0
     for sale in sales:
@@ -77,7 +88,6 @@ def calculate_date_revenue(sales, target_date):
             total = sale["quantity"] * sale["price"]
             total_revenue += total
     return total_revenue
-    
 
 # Function to generate sales report
 def sales_report(sales):
@@ -87,6 +97,16 @@ def sales_report(sales):
     total_revenue = calculate_total_revenue(sales)
     today_revenue = calculate_today_revenue(sales)
     today_sales = calculate_today_sales(sales)
+
+    # New feature: product search
+    target_product = get_product("Enter product: ")
+    matching_sales = find_sales_by_product(sales, target_product)
+    if len(matching_sales) == 0:
+        print(f"No sales found for {target_product}")
+    else:
+        display_sales(matching_sales)
+        product_revenue = calculate_total_revenue(matching_sales)
+        print(f"Total revenue for {target_product}: ₦{product_revenue:,}")
 
     target_date = input("Enter date (YYYY-MM-DD): ")
     date_revenue = calculate_date_revenue(sales, target_date)
@@ -135,42 +155,46 @@ def sales_report(sales):
             percentage = total / total_revenue * 100
             print(product, "—", total, f"({round(percentage, 2)}%)")
     else:
-        print("Sales per product: No revenue")
-# Load existing sales from sales.json
-with open("sales.json", "r") as file:
-    sales = json.load(file)
+        print("sales per product: No revenue")
 
-for sale in sales:
-    if "date" not in sale:
-        sale["date"] = date.today().isoformat()
+if __name__ == "__main__":
+    # Load existing sales from sales.json
+    with open("sales.json", "r") as file:
+        sales = json.load(file)
 
-add_more = "yes"
+    for sale in sales:
+        if "date" not in sale:
+            sale["date"] = date.today().isoformat()
 
-# Main loop to add sales
-while add_more == "yes":
-    product = get_product("Enter product: ")
-    quantity = get_positive_number("Enter quantity: ")
-    price = get_positive_number("Enter price: ")
+    add_more = "yes"
 
-    sale = {
-        "product": product,
-        "quantity": quantity,
-        "price": price,
-        "date": date.today().isoformat()
-    }
-    sales.append(sale)
+    # Main loop to add sales
+    while add_more == "yes":
+        product = get_product("Enter product: ")
+        quantity = get_positive_number("Enter quantity: ")
+        price = get_positive_number("Enter price: ")
 
-    add_more = ""
-    while add_more != "yes" and add_more != "no":
-        add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
+        sale = {
+            "product": product,
+            "quantity": quantity,
+            "price": price,
+            "date": date.today().isoformat()
+        }
+        sales.append(sale)
 
-# Display all sales
-display_sales(sales)
+        add_more = ""
+        while add_more != "yes" and add_more != "no":
+            add_more = input(
+                "Do you want to add another sale? yes/no: "
+            ).strip().lower()
 
-# Save updated sales back to sales.json
-sales_json = json.dumps(sales)
-with open("sales.json", "w") as file:
-    file.write(sales_json)
+    # Display all sales
+    display_sales(sales)
 
-# Call the report function
-sales_report(sales)
+    # Save updated sales back to sales.json
+    sales_json = json.dumps(sales)
+    with open("sales.json", "w") as file:
+        file.write(sales_json)
+
+    # Call the report function
+    sales_report(sales)
