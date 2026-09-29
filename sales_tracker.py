@@ -89,6 +89,15 @@ def find_sales_by_date(sales, target_date):
 
     return matching_sales
 
+def find_sales_by_date_range(sales, start_date, end_date):
+    matching_sales = []
+
+    for sale in sales:
+        if start_date <= sale["date"] <= end_date:
+            matching_sales.append(sale)
+
+    return matching_sales
+
 # Function to generate sales report
 def sales_report(sales):
     total_sales = len(sales)
