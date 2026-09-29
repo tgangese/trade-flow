@@ -80,15 +80,6 @@ def calculate_today_sales(sales):
         if sale["date"] == today:
             today_sales += 1
     return today_sales
-
-def calculate_date_revenue(sales, target_date):
-    total_revenue = 0
-    for sale in sales:
-        if sale["date"] == target_date:
-            total = sale["quantity"] * sale["price"]
-            total_revenue += total
-    return total_revenue
-
 def find_sales_by_date(sales, target_date):
     matching_sales = []
 
@@ -122,10 +113,11 @@ def sales_report(sales):
 
     if len(matching_sales) == 0:
         print(f"No sales found for {target_date}")
+        date_revenue = 0
     else:
         display_sales(matching_sales)
-
-    date_revenue = calculate_date_revenue(sales, target_date)
+        print("Number of sales:", len(matching_sales))
+        date_revenue = calculate_total_revenue(matching_sales)
 
     max_sale = 0
     max_product = ""
