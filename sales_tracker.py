@@ -89,6 +89,15 @@ def calculate_date_revenue(sales, target_date):
             total_revenue += total
     return total_revenue
 
+def find_sales_by_date(sales, target_date):
+    matching_sales = []
+
+    for sale in sales:
+        if sale["date"] == target_date:
+            matching_sales.append(sale)
+
+    return matching_sales
+
 # Function to generate sales report
 def sales_report(sales):
     total_sales = len(sales)
@@ -109,6 +118,13 @@ def sales_report(sales):
         print(f"Total revenue for {target_product}: ₦{product_revenue:,}")
 
     target_date = input("Enter date (YYYY-MM-DD): ")
+    matching_sales = find_sales_by_date(sales, target_date)
+
+    if len(matching_sales) == 0:
+        print(f"No sales found for {target_date}")
+    else:
+        display_sales(matching_sales)
+
     date_revenue = calculate_date_revenue(sales, target_date)
 
     max_sale = 0
