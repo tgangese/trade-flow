@@ -99,6 +99,15 @@ def find_sales_by_date(sales, target_date):
 
     return matching_sales
 
+def get_non_empty_text(prompt, label="Item"):
+    while True:
+        text = input(prompt).strip().capitalize()
+
+        if text == "":
+            print(f"{label} cannot be empty.")
+        else:
+            return text
+
 def find_sales_by_date_range(sales, start_date, end_date):
     matching_sales = []
 
@@ -107,6 +116,47 @@ def find_sales_by_date_range(sales, start_date, end_date):
             matching_sales.append(sale)
 
     return matching_sales
+
+def expenses_report(expenses):
+    total_expenses = 0
+
+    for expense in expenses:
+        print(expense["category"], "-", expense["amount"])
+        total_expenses += expense["amount"]
+
+    print("Total expenses:", total_expenses)
+
+    category_totals = calculate_expenses_per_category(expenses)
+
+    print("Expenses by category:")
+    for category, total in category_totals.items():
+        print(category, "-", total)
+
+
+def add_expense(expenses):
+    category = get_non_empty_text("Enter expense category: ", "Expense category")
+    amount = get_positive_number("Enter expense amount: ")
+    expense = {
+        "category": category,
+        "amount": amount,
+        "date": date.today().isoformat()
+    }
+
+    expenses.append(expense)
+
+
+def calculate_expenses_per_category(expenses):
+    category_totals = {}
+
+    for expense in expenses:
+        category = expense["category"]
+
+        if category not in category_totals:
+            category_totals[category] = expense["amount"]
+        else:
+            category_totals[category] += expense["amount"]
+
+    return category_totals
 
 # Function to generate sales report
 def sales_report(sales):
@@ -211,6 +261,9 @@ if __name__ == "__main__":
     with open("sales.json", "r") as file:
         sales = json.load(file)
 
+    with open("expenses.json", "r") as file:
+        expenses = json.load(file)
+
     for sale in sales:
         if "date" not in sale:
             sale["date"] = date.today().isoformat()
@@ -247,3 +300,11 @@ if __name__ == "__main__":
 
     # Call the report function
     sales_report(sales)
+
+    add_expense(expenses)
+
+    expenses_json = json.dumps(expenses)
+    with open("expenses.json", "w") as file:
+        file.write(expenses_json)
+
+    expenses_report(expenses)
