@@ -117,7 +117,7 @@ def find_sales_by_date_range(sales, start_date, end_date):
 
     return matching_sales
 
-def expenses_report(expenses):
+def expenses_report(sales, expenses):
     total_expenses = 0
 
     for expense in expenses:
@@ -131,6 +131,9 @@ def expenses_report(expenses):
     print("Expenses by category:")
     for category, total in category_totals.items():
         print(category, "-", total)
+
+    profit = calculate_profit(sales, expenses)
+    print("Profit:", profit)
 
 
 def add_expense(expenses):
@@ -157,6 +160,22 @@ def calculate_expenses_per_category(expenses):
             category_totals[category] += expense["amount"]
 
     return category_totals
+
+def calculate_profit(sales, expenses):
+    total_revenue = calculate_total_revenue(sales)
+    total_expenses = calculate_total_expenses(expenses)
+
+    profit = total_revenue - total_expenses
+
+    return profit
+
+def calculate_total_expenses(expenses):
+    total_expenses = 0
+
+    for expense in expenses:
+        total_expenses += expense["amount"]
+
+    return total_expenses
 
 # Function to generate sales report
 def sales_report(sales):
@@ -307,4 +326,4 @@ if __name__ == "__main__":
     with open("expenses.json", "w") as file:
         file.write(expenses_json)
 
-    expenses_report(expenses)
+    expenses_report(sales, expenses)
