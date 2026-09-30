@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import date, datetime
 
 # Function to get a positive number (used for quantity and price)
 def get_positive_number(prompt):
@@ -25,6 +25,16 @@ def get_product(prompt):
         else:
             valid_product = True
     return product
+
+def get_valid_date(prompt):
+    while True:
+        date_text = input(prompt)
+
+        try:
+            datetime.strptime(date_text, "%Y-%m-%d")
+            return date_text
+        except ValueError:
+            print("Invalid date. Use YYYY-MM-DD.")
 
 # Function to calculate total revenue
 def calculate_total_revenue(sales):
@@ -117,7 +127,7 @@ def sales_report(sales):
         product_revenue = calculate_total_revenue(matching_sales)
         print(f"Total revenue for {target_product}: ₦{product_revenue:,}")
 
-    target_date = input("Enter date (YYYY-MM-DD): ")
+    target_date = get_valid_date("Enter date (YYYY-MM-DD): ")
     matching_sales = find_sales_by_date(sales, target_date)
 
     if len(matching_sales) == 0:
@@ -129,8 +139,8 @@ def sales_report(sales):
         date_revenue = calculate_total_revenue(matching_sales)
 
     # Date-range search
-    start_date = input("Enter start date (YYYY-MM-DD): ")
-    end_date = input("Enter end date (YYYY-MM-DD): ")
+    start_date = get_valid_date("Enter start date (YYYY-MM-DD): ")
+    end_date = get_valid_date("Enter end date (YYYY-MM-DD): ")
 
     matching_range_sales = find_sales_by_date_range(sales, start_date, end_date)
 
