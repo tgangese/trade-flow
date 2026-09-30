@@ -132,9 +132,13 @@ def expenses_report(sales, expenses):
     for category, total in category_totals.items():
         print(category, "-", total)
 
+    total_revenue = calculate_total_revenue(sales)
+
     profit = calculate_profit(sales, expenses)
     print("Profit:", profit)
 
+    profit_margin = calculate_profit_margin(profit, total_revenue)
+    print(f"Profit Margin: {profit_margin:.2f}%")
 
 def add_expense(expenses):
     category = get_non_empty_text("Enter expense category: ", "Expense category")
@@ -168,6 +172,10 @@ def calculate_profit(sales, expenses):
     profit = total_revenue - total_expenses
 
     return profit
+
+def calculate_profit_margin(profit, revenue):
+    profit_margin = (profit / revenue) * 100
+    return profit_margin
 
 def calculate_total_expenses(expenses):
     total_expenses = 0
