@@ -128,6 +128,22 @@ def sales_report(sales):
         print("Number of sales:", len(matching_sales))
         date_revenue = calculate_total_revenue(matching_sales)
 
+    # Date-range search
+    start_date = input("Enter start date (YYYY-MM-DD): ")
+    end_date = input("Enter end date (YYYY-MM-DD): ")
+
+    matching_range_sales = find_sales_by_date_range(sales, start_date, end_date)
+
+    if len(matching_range_sales) == 0:
+        print(f"No sales found between {start_date} and {end_date}")
+        range_revenue = 0
+    else:
+        display_sales(matching_range_sales)
+        print("Number of sales:", len(matching_range_sales))
+        range_revenue = calculate_total_revenue(matching_range_sales)
+
+    print("Revenue from", start_date, "to", end_date, ":", range_revenue)
+
     max_sale = 0
     max_product = ""
 
