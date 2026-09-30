@@ -139,8 +139,14 @@ def sales_report(sales):
         date_revenue = calculate_total_revenue(matching_sales)
 
     # Date-range search
-    start_date = get_valid_date("Enter start date (YYYY-MM-DD): ")
-    end_date = get_valid_date("Enter end date (YYYY-MM-DD): ")
+    while True:
+        start_date = get_valid_date("Enter start date (YYYY-MM-DD): ")
+        end_date = get_valid_date("Enter end date (YYYY-MM-DD): ")
+
+        if start_date > end_date:
+            print("Start date cannot be after end date.")
+        else:
+            break
 
     matching_range_sales = find_sales_by_date_range(sales, start_date, end_date)
 
