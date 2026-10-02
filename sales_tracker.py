@@ -198,6 +198,29 @@ def calculate_total_expenses(expenses):
 
     return total_expenses
 
+def find_expenses_by_date(expenses, target_date):
+    matching_expenses = []
+
+    for expense in expenses:
+        if expense["date"] == target_date:
+            matching_expenses.append(expense)
+
+    return matching_expenses
+
+
+def financial_summary_by_date(sales, expenses, target_date):
+    daily_sales = find_sales_by_date(sales, target_date)
+    daily_expenses = find_expenses_by_date(expenses, target_date)
+
+    total_revenue = calculate_total_revenue(daily_sales)
+    total_expenses = calculate_total_expenses(daily_expenses)
+
+    profit = total_revenue - total_expenses
+    profit_margin = calculate_profit_margin(profit, total_revenue)
+
+    return total_revenue, total_expenses, profit, profit_margin
+
+
 # Function to generate sales report
 def sales_report(sales):
     total_sales = len(sales)
@@ -349,3 +372,14 @@ if __name__ == "__main__":
 
     expenses_report(sales, expenses)
     financial_summary(sales, expenses)
+
+    target_date = get_valid_date("Enter date for financial summary (YYYY-MM-DD): ")
+
+    daily_revenue, daily_expenses, daily_profit, daily_profit_margin = financial_summary_by_date(
+        sales, expenses, target_date
+    )
+
+    print("Daily revenue:", daily_revenue)
+    print("Daily expenses:", daily_expenses)
+    print("Daily profit:", daily_profit)
+    print("Daily profit margin:", f"{daily_profit_margin:.2f}%")
