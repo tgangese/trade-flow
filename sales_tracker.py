@@ -177,6 +177,19 @@ def calculate_profit_margin(profit, revenue):
     profit_margin = (profit / revenue) * 100
     return profit_margin
 
+def financial_summary(sales, expenses):
+    total_revenue = calculate_total_revenue(sales)
+    total_expenses = calculate_total_expenses(expenses)
+    profit = calculate_profit(sales, expenses)
+    profit_margin = calculate_profit_margin(profit, total_revenue)
+
+    print("Financial Summary")
+    print("-----------------")
+    print("Total Revenue:", total_revenue)
+    print("Total Expenses:", total_expenses)
+    print("Profit:", profit)
+    print(f"Profit Margin: {profit_margin:.2f}%")
+
 def calculate_total_expenses(expenses):
     total_expenses = 0
 
@@ -335,3 +348,4 @@ if __name__ == "__main__":
         file.write(expenses_json)
 
     expenses_report(sales, expenses)
+    financial_summary(sales, expenses)
