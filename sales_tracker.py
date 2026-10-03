@@ -220,6 +220,30 @@ def financial_summary_by_date(sales, expenses, target_date):
 
     return total_revenue, total_expenses, profit, profit_margin
 
+def financial_summary_by_date_range(sales, expenses, start_date, end_date):
+    period_sales = find_sales_by_date_range(sales, start_date, end_date)
+
+    period_expenses = find_expenses_by_date_range(
+        expenses, start_date, end_date
+    )
+
+    total_revenue = calculate_total_revenue(period_sales)
+    total_expenses = calculate_total_expenses(period_expenses)
+
+    profit = total_revenue - total_expenses
+    profit_margin = calculate_profit_margin(profit, total_revenue)
+
+    return total_revenue, total_expenses, profit, profit_margin
+
+
+def find_expenses_by_date_range(expenses, start_date, end_date):
+    matching_expenses = []
+
+    for expense in expenses:
+        if start_date <= expense["date"] <= end_date:
+            matching_expenses.append(expense)
+
+    return matching_expenses
 
 # Function to generate sales report
 def sales_report(sales):
@@ -383,3 +407,17 @@ if __name__ == "__main__":
     print("Daily expenses:", daily_expenses)
     print("Daily profit:", daily_profit)
     print("Daily profit margin:", f"{daily_profit_margin:.2f}%")
+
+    start_date = get_valid_date("Enter start date for financial summary (YYYY-MM-DD): ")
+    end_date = get_valid_date("Enter end date for financial summary (YYYY-MM-DD): ")
+
+    range_revenue, range_expenses, range_profit, range_profit_margin = financial_summary_by_date_range(
+        sales, expenses, start_date, end_date
+    )
+
+    print("Financial Summary for", start_date, "to", end_date)
+    print("----------------------------------------")
+    print("Revenue:", range_revenue)
+    print("Expenses:", range_expenses)
+    print("Profit:", range_profit)
+    print("Profit Margin:", f"{range_profit_margin:.2f}%")
