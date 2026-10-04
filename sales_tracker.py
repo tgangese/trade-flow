@@ -387,26 +387,12 @@ def sales_report(sales):
     else:
         print("sales per product: No revenue")
 
-if __name__ == "__main__":
-    # Load existing sales from sales.json
-    with open("sales.json", "r") as file:
-        sales = json.load(file)
-
-    with open("expenses.json", "r") as file:
-        expenses = json.load(file)
-
-    for sale in sales:
-        if "date" not in sale:
-            sale["date"] = date.today().isoformat()
-
+def add_sale_flow(sales):
     add_more = "yes"
-
-    # Main loop to add sales
     while add_more == "yes":
         product = get_product("Enter product: ")
         quantity = get_positive_number("Enter quantity: ")
         price = get_positive_number("Enter price: ")
-
         sale = {
             "product": product,
             "quantity": quantity,
@@ -414,58 +400,74 @@ if __name__ == "__main__":
             "date": date.today().isoformat()
         }
         sales.append(sale)
-
         add_more = ""
         while add_more != "yes" and add_more != "no":
-            add_more = input(
-                "Do you want to add another sale? yes/no: "
-            ).strip().lower()
-
-    # Display all sales
-    display_sales(sales)
-
-    # Save updated sales back to sales.json
-    sales_json = json.dumps(sales)
+            add_more = input("Do you want to add another sale? yes/no: ").strip().lower()
     with open("sales.json", "w") as file:
-        file.write(sales_json)
+        json.dump(sales, file)
+    print(f"Saved. Total sales: {len(sales)}")
 
-    # Call the report function
-    sales_report(sales)
-
+def add_expense_flow(expenses):
     add_expense(expenses)
-
-    expenses_json = json.dumps(expenses)
     with open("expenses.json", "w") as file:
-        file.write(expenses_json)
+        json.dump(expenses, file)
+    print("Expense saved.")
 
-    expenses_report(sales, expenses)
-    financial_summary(sales, expenses)
+def search_flow(sales):
+    target_product = get_product("Enter product to search: ")
+    matching = find_sales_by_product(sales, target_product)
+    if not matching:
+        print(f"No sales for {target_product}")
+    else:
+        display_sales(matching)
+        print(f"Revenue for {target_product}: ₦{calculate_total_revenue(matching):,}")
 
-    target_date = get_valid_date("Enter date for financial summary (YYYY-MM-DD): ")
+if __name__ == "__main__":
+    with open("sales.json", "r") as file:
+        sales = json.load(file)
+    with open("expenses.json", "r") as file:
+        expenses = json.load(file)
 
-    daily_revenue, daily_expenses, daily_profit, daily_profit_margin, daily_cash_flow = financial_summary_by_date(
-        sales, expenses, target_date
-    )
+    for sale in sales:
+        if "date" not in sale:
+            sale["date"] = date.today().isoformat()
 
+    while True:
+        print("\n=== TradeFlow - SME Dashboard ===")
+        print("1. Add Sale")
+        print("2. Add Expense")
+        print("3. View Dashboard (Financial Summary + Insights)")
+        print("4. Search Sales by Product")
+        print("5. Search Sales by Date")
+        print("6. View All Sales")
+        print("7. View Expenses Report")
+        print("8. Exit")
+        
+        choice = input("Choose (1-8): ").strip()
 
-    print("Daily revenue:", daily_revenue)
-    print("Daily expenses:", daily_expenses)
-    print("Daily profit:", daily_profit)
-    print("Daily profit margin:", f"{daily_profit_margin:.2f}%")
-    print("Daily cash flow:", daily_cash_flow)
-
-
-    start_date = get_valid_date("Enter start date for financial summary (YYYY-MM-DD): ")
-    end_date = get_valid_date("Enter end date for financial summary (YYYY-MM-DD): ")
-
-    revenue, expenses, profit, margin, cash_flow = financial_summary_by_date_range(
-        sales, expenses, start_date, end_date
-    )
-
-    print(f"Financial Summary for {start_date} to {end_date}")
-    print("----------------------------------------")
-    print(f"Revenue: {revenue}")
-    print(f"Expenses: {expenses}")
-    print(f"Profit: {profit}")
-    print(f"Profit Margin: {margin:.2f}%")
-    print(f"Cash Flow: {cash_flow}")
+        if choice == "1":
+            add_sale_flow(sales)
+        elif choice == "2":
+            add_expense_flow(expenses)
+        elif choice == "3":
+            financial_summary(sales, expenses)
+        elif choice == "4":
+            search_flow(sales)
+        elif choice == "5":
+            d = get_valid_date("Enter date (YYYY-MM-DD): ")
+            m = find_sales_by_date(sales, d)
+            if not m:
+                print(f"No sales for {d}")
+            else:
+                display_sales(m)
+                print(f"Total for {d}: {calculate_total_revenue(m)}")
+        elif choice == "6":
+            display_sales(sales)
+            print(f"Total sales: {len(sales)}")
+        elif choice == "7":
+            expenses_report(sales, expenses)
+        elif choice == "8":
+            print("Goodbye! TradeFlow saved.")
+            break
+        else:
+            print("Invalid choice.")
