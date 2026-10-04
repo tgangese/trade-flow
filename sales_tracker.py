@@ -204,6 +204,13 @@ def financial_summary(sales, expenses):
     if expensive_cat:
         print(f"Highest expense: {expensive_cat} - {expensive_amount}")
 
+    best_product, best_amount = best_selling_product(sales)
+    if best_product:
+        total_revenue = calculate_total_revenue(sales)
+        percentage = (best_amount / total_revenue * 100) if total_revenue else 0
+        print(f"Best seller: {best_product} - {best_amount} ({percentage:.2f}% of revenue)")
+
+
 def calculate_total_expenses(expenses):
     total_expenses = 0
 
@@ -224,6 +231,16 @@ def most_expensive_category(expenses):
 
     most_expensive = max(category_totals, key=category_totals.get)
     return most_expensive, category_totals[most_expensive]
+
+
+def best_selling_product(sales):
+    product_sales = calculate_sales_per_product(sales)
+    
+    if not product_sales:
+        return None, 0
+    
+    best_product = max(product_sales, key=product_sales.get)
+    return best_product, product_sales[best_product]
 
 
 def find_expenses_by_date(expenses, target_date):
