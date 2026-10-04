@@ -173,6 +173,11 @@ def calculate_profit(sales, expenses):
 
     return profit
 
+def calculate_cash_flow(sales, expenses):
+    total_revenue = calculate_total_revenue(sales)
+    total_expenses = calculate_total_expenses(expenses)
+    return total_revenue - total_expenses
+
 def calculate_profit_margin(profit, revenue):
     profit_margin = (profit / revenue) * 100
     return profit_margin
@@ -182,6 +187,7 @@ def financial_summary(sales, expenses):
     total_expenses = calculate_total_expenses(expenses)
     profit = calculate_profit(sales, expenses)
     profit_margin = calculate_profit_margin(profit, total_revenue)
+    cash_flow = calculate_cash_flow(sales, expenses)
 
     print("Financial Summary")
     print("-----------------")
@@ -189,6 +195,7 @@ def financial_summary(sales, expenses):
     print("Total Expenses:", total_expenses)
     print("Profit:", profit)
     print(f"Profit Margin: {profit_margin:.2f}%")
+    print("Cash Flow:", cash_flow)
 
 def calculate_total_expenses(expenses):
     total_expenses = 0
@@ -218,23 +225,22 @@ def financial_summary_by_date(sales, expenses, target_date):
     profit = total_revenue - total_expenses
     profit_margin = calculate_profit_margin(profit, total_revenue)
 
-    return total_revenue, total_expenses, profit, profit_margin
+    cash_flow = calculate_cash_flow(daily_sales, daily_expenses)
+
+    return total_revenue, total_expenses, profit, profit_margin, cash_flow
 
 def financial_summary_by_date_range(sales, expenses, start_date, end_date):
     period_sales = find_sales_by_date_range(sales, start_date, end_date)
-
-    period_expenses = find_expenses_by_date_range(
-        expenses, start_date, end_date
-    )
+    period_expenses = find_expenses_by_date_range(expenses, start_date, end_date)
 
     total_revenue = calculate_total_revenue(period_sales)
     total_expenses = calculate_total_expenses(period_expenses)
 
     profit = total_revenue - total_expenses
     profit_margin = calculate_profit_margin(profit, total_revenue)
+    cash_flow = calculate_cash_flow(period_sales, period_expenses)
 
-    return total_revenue, total_expenses, profit, profit_margin
-
+    return total_revenue, total_expenses, profit, profit_margin, cash_flow
 
 def find_expenses_by_date_range(expenses, start_date, end_date):
     matching_expenses = []
@@ -399,25 +405,29 @@ if __name__ == "__main__":
 
     target_date = get_valid_date("Enter date for financial summary (YYYY-MM-DD): ")
 
-    daily_revenue, daily_expenses, daily_profit, daily_profit_margin = financial_summary_by_date(
+    daily_revenue, daily_expenses, daily_profit, daily_profit_margin, daily_cash_flow = financial_summary_by_date(
         sales, expenses, target_date
     )
+
 
     print("Daily revenue:", daily_revenue)
     print("Daily expenses:", daily_expenses)
     print("Daily profit:", daily_profit)
     print("Daily profit margin:", f"{daily_profit_margin:.2f}%")
+    print("Daily cash flow:", daily_cash_flow)
+
 
     start_date = get_valid_date("Enter start date for financial summary (YYYY-MM-DD): ")
     end_date = get_valid_date("Enter end date for financial summary (YYYY-MM-DD): ")
 
-    range_revenue, range_expenses, range_profit, range_profit_margin = financial_summary_by_date_range(
+    revenue, expenses, profit, margin, cash_flow = financial_summary_by_date_range(
         sales, expenses, start_date, end_date
     )
 
-    print("Financial Summary for", start_date, "to", end_date)
+    print(f"Financial Summary for {start_date} to {end_date}")
     print("----------------------------------------")
-    print("Revenue:", range_revenue)
-    print("Expenses:", range_expenses)
-    print("Profit:", range_profit)
-    print("Profit Margin:", f"{range_profit_margin:.2f}%")
+    print(f"Revenue: {revenue}")
+    print(f"Expenses: {expenses}")
+    print(f"Profit: {profit}")
+    print(f"Profit Margin: {margin:.2f}%")
+    print(f"Cash Flow: {cash_flow}")
