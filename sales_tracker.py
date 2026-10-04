@@ -200,6 +200,10 @@ def financial_summary(sales, expenses):
     print(f"Profit Margin: {profit_margin:.2f}%")
     print("Cash Flow:", cash_flow)
 
+    expensive_cat, expensive_amount = most_expensive_category(expenses)
+    if expensive_cat:
+        print(f"Highest expense: {expensive_cat} - {expensive_amount}")
+
 def calculate_total_expenses(expenses):
     total_expenses = 0
 
@@ -207,6 +211,20 @@ def calculate_total_expenses(expenses):
         total_expenses += expense["amount"]
 
     return total_expenses
+
+def most_expensive_category(expenses):
+    category_totals = {}
+    for expense in expenses:
+        category = expense["category"]
+        amount = expense["amount"]
+        category_totals[category] = category_totals.get(category, 0) + amount
+
+    if not category_totals:
+        return None, 0
+
+    most_expensive = max(category_totals, key=category_totals.get)
+    return most_expensive, category_totals[most_expensive]
+
 
 def find_expenses_by_date(expenses, target_date):
     matching_expenses = []
