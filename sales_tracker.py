@@ -179,8 +179,11 @@ def calculate_cash_flow(sales, expenses):
     return total_revenue - total_expenses
 
 def calculate_profit_margin(profit, revenue):
+    if revenue == 0:
+        return 0.0
     profit_margin = (profit / revenue) * 100
     return profit_margin
+
 
 def financial_summary(sales, expenses):
     total_revenue = calculate_total_revenue(sales)
