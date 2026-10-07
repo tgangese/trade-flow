@@ -3,12 +3,13 @@
 <head>
 <title>TradeFlow - For Market Women</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
 <style>
 body { font-family: Arial; background: #f5f5f5; padding: 20px; }
 .card { background: white; padding: 20px; margin: 10px 0; border-radius: 12px; box-shadow: 0 2px 5px #ccc; }
 .big { font-size: 28px; font-weight: bold; color: #0a7a42; }
-.btn { background: #0a7a42; color: white; padding: 15px; border: none; border-radius: 8px; width: 100%; font-size: 18px; margin-top: 10px; }
-input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+.btn { background: #0a7a42; color: white; padding: 15px; border: none; border-radius: 8px; width: 100%; font-size: 18px; margin-top: 10px; cursor: pointer; }
+input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
 </style>
 </head>
 <body>
@@ -40,24 +41,31 @@ input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ccc; 
 </div>
 
 <script>
+const API = "https://trade-flow-brw1.onrender.com"; // <-- PUT YOUR REAL RENDER LINK HERE
+
 async function loadDashboard() {
-  let res = await fetch('http://127.0.0.1:8000/dashboard');
-  let data = await res.json();
-  document.getElementById('revenue').innerText = '₦' + data.financials.total_revenue.toLocaleString();
-  document.getElementById('profit').innerText = '₦' + data.financials.profit.toLocaleString();
-  document.getElementById('margin').innerText = 'Margin: ' + data.financials.profit_margin.toFixed(1) + '%';
-  
-  let res2 = await fetch('http://127.0.0.1:8000/insights');
-  let data2 = await res2.json();
-  document.getElementById('best').innerText = data2.best_seller;
-  document.getElementById('advice').innerText = data2.advice;
+  try {
+    let res = await fetch(`${API}/dashboard`);
+    let data = await res.json();
+    document.getElementById('revenue').innerText = '₦' + data.financials.total_revenue.toLocaleString();
+    document.getElementById('profit').innerText = '₦' + data.financials.profit.toLocaleString();
+    document.getElementById('margin').innerText = 'Margin: ' + data.financials.profit_margin.toFixed(1) + '%';
+    
+    let res2 = await fetch(`${API}/insights`);
+    let data2 = await res2.json();
+    document.getElementById('best').innerText = data2.best_seller;
+    document.getElementById('advice').innerText = data2.advice;
+  } catch (e) {
+    document.getElementById('revenue').innerText = 'API sleeping... refresh in 30s';
+    console.log(e);
+  }
 }
 
 async function askAI() {
   let q = document.getElementById('question').value;
   if(!q) return alert('Type question first');
   document.getElementById('answer').innerText = 'Thinking...';
-  let res = await fetch('http://127.0.0.1:8000/ask?question=' + encodeURIComponent(q));
+  let res = await fetch(`${API}/ask?question=` + encodeURIComponent(q));
   let data = await res.json();
   document.getElementById('answer').innerText = data.answer;
 }
