@@ -1,76 +1,81 @@
 # TradeFlow - AI Business OS for African SMEs
+Built in Otukpo, Benue State 🇳🇬 — From messy sales books to AI decisions.
 
-Built from Otukpo, Benue State for market traders who need offline-first business intelligence.
+🚀 **LIVE:**
+- **Frontend (for traders):** https://trade-flow-7xa5-chi.vercel.app/
+- **API:** https://trade-flow-brw1.onrender.com
+- **API Docs:** https://trade-flow-brw1.onrender.com/docs
+- **Ask AI Example:** https://trade-flow-brw1.onrender.com/ask?question=stock
 
-## What it does
+📊 **Real Data:** 81 sales | ₦498,740 revenue | ₦360,140 profit (72.2%) | Best Seller: Corn (12% of revenue)
 
-TradeFlow turns messy sales books into instant business decisions.
+For market women — profit is "Na Your Gain", advice is "Make You Stock Am"
 
-Terminal:
+## What It Does
 
+TradeFlow turns messy paper sales books into instant business decisions for African SMEs.
+
+**Terminal OS:**
 === TradeFlow - SME Dashboard ===
-Financial Summary
+Total Revenue: ₦498,740
+Profit (Na Your Gain): ₦360,140
+Margin: 72.2%
+Best Seller: Corn - ₦60,000 (12.03%) — Make You Stock Am
 
-Total Revenue: 12454640
-Profit: 12315740.0
-Profit Margin: 98.88%
-Best seller: Rice - 5010000 (40.23% of revenue)
-Highest expense: Salaries - 50000
 Code
 
-
-API:
+**API OS:**
 ```bash
-GET /dashboard
-→ {"total_revenue":12454640, "best_seller": {"product":"Rice","amount":5010000}}
+GET /dashboard → {revenue, profit, margin, best_seller}
+GET /insights → {advice, product_breakdown}
+GET /ask?question=stock → "Corn drives 12% - stock more"
 
-GET /insights
-→ ["Rice drives 40.2% of revenue - consider stocking more"]
+1 line hidden
+Frontend OS: Mobile-first dashboard for mama traders — no laptop needed.
 
 Architecture
+Data Layer: JSON persistence, validation, 81 sales tracked
+Calculation Layer: Revenue, expenses, profit, margin, cash flow (zero-division safe)
+Analytics Layer: Best seller, highest expense, product mix
+UX Layer: Interactive terminal + mobile web
+API Layer: FastAPI with CORS, /docs auto-generated
+Deploy Layer: Render (API) + Vercel (Frontend) — Otukpo to World
 
-    Data Layer: JSON persistence with validation (82 sales tracked)
-    Calculation Layer: Revenue, expenses, profit, margin, cash flow, zero-division safe
-    Analytics Layer: Most expensive category, best seller, product breakdown
-    UX Layer: Interactive menu (modular flows, not 300-line dump)
-    API Layer: FastAPI with /dashboard, /insights, auto docs at /docs
-
-Run locally
+Run Locally
 Bash
-
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Terminal OS
+# Terminal
 python3 sales_tracker.py
 
-# API OS
+# API
 uvicorn api:app --reload
-# Open http://127.0.0.1:8000/docs
-
+# → http://127.0.0.1:8000/docs
 
 Roadmap
+Financial Management (daily, range, cash flow)[x]
+Business Intelligence (best seller, highest expense)[x]
+API Layer (FastAPI + CORS)[x]
+Frontend for market women (Vercel live)[x]
+Deployment (Render + Vercel)[x]
+ RAG Assistant — real OpenAI for Pidgin queries
+ WhatsApp Bot — traders query via WhatsApp
+ Auth & Multi-trader support
 
-    Financial Management (daily, range, cash flow)[x]
-    Business Intelligence (best seller, highest expense)[x]
-    API Layer (FastAPI)[x]
-    RAG Assistant - "Why is my profit low?" → AI uses real data
-    WhatsApp Bot - traders query via WhatsApp
-    Frontend Dashboard - React calling /dashboard
+Why This Matters
+African SMEs lose 60% of profit to poor tracking. TradeFlow is offline-first, API-ready, AI-extensible — built for Otukpo market realities, scalable to 44M Nigerian SMEs.
 
-Why this matters
+Stack: Python, FastAPI, Vercel, Render, Git — AI Engineer foundations.
+Builder: @tgangese — Building AI for Naija from Otukpo.
 
-African SMEs lose 60% of profit to poor tracking. TradeFlow is offline-first, API-ready, and AI-extensible - built for Otukpo market realities, scalable to 44M Nigerian SMEs.
 
-Stack: Python, FastAPI, JSON, Git - AI Engineer foundations.
-Code
-
+Save `Ctrl+O` → Enter → `Ctrl+X`
 
 Then:
 
 ```bash
 git add README.md
-git commit -m "Add README - TradeFlow AI Business OS narrative"
+git commit -m "TradeFlow v1.0 FINAL - Live links brw1 + 7xa5, 81 sales, 360k profit, roadmap updated"
 git push
-
