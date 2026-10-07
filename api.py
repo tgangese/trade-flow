@@ -1,7 +1,11 @@
 import json
+import json
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="TradeFlow API", description="AI Business OS for African SMEs - Built in Otukpo")
-
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+)
 def load_data():
     with open("sales.json", "r") as f:
         sales = json.load(f)
