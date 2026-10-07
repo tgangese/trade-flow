@@ -1,65 +1,102 @@
-from fastapi import FastAPI
 import json
-from sales_tracker import (
-    calculate_total_revenue,
-    calculate_total_expenses,
-    calculate_profit,
-    calculate_profit_margin,
-    calculate_cash_flow,
-    calculate_sales_per_product,
-    most_expensive_category,
-    best_selling_product
-)
-
-app = FastAPI(title="TradeFlow API - SME Business OS")
+from fastapi import FastAPI
+app = FastAPI(title="TradeFlow API", description="AI Business OS for African SMEs - Built in Otukpo")
 
 def load_data():
     with open("sales.json", "r") as f:
         sales = json.load(f)
-    with open("expenses.json", "r") as f:
-        expenses = json.load(f)
+    try:
+        with open("expenses.json", "r") as f:
+            expenses = json.load(f)
+    except:
+        expenses = []
     return sales, expenses
 
-@app.get("/")
-def home():
-    return {"message": "TradeFlow API running", "mission": "AI Business OS for African SMEs"}
+def get_amount(s):
+    # auto-detect amount field
+    for key in ['total', 'amount', 'price', 'value', 'revenue', 'cost']:
+        if key in s:
+            return float(s[key])
+    # if quantity * price
+    if 'quantity' in s and 'price' in s:
+        return float(s['quantity']) * float(s['price'])
+    if 'qty' in s and 'price' in s:
+        return float(s['qty']) * float(s['price'])
+    return 0
 
-@app.get("/dashboard")
-def dashboard():
+def get_product_name(s):
+    for key in ['product', 'item', 'name', 'product_name', 'item_name']:
+        if key in s:
+            return s[key]
+    return "Unknown"
+
+def get_summary():
     sales, expenses = load_data()
-    total_revenue = calculate_total_revenue(sales)
-    total_expenses = calculate_total_expenses(expenses)
-    profit = calculate_profit(sales, expenses)
-    margin = calculate_profit_margin(profit, total_revenue)
-    cash_flow = calculate_cash_flow(sales, expenses)
-    best_prod, best_amt = best_selling_product(sales)
-    high_cat, high_amt = most_expensive_category(expenses)
-    
+    total_revenue = sum(get_amount(s) for s in sales)
+    total_expenses = sum(get_amount(e) for e in expenses) if expenses else 0
+    profit = total_revenue - total_expenses
+    profit_margin = (profit / total_revenue * 100) if total_revenue else 0
+
+    product_totals = {}
+    for s in sales:
+        name = get_product_name(s)
+        product_totals[name] = product_totals.get(name, 0) + get_amount(s)
+
+    best_product = max(product_totals, key=product_totals.get) if product_totals else "Rice"
+    best_amount = product_totals.get(best_product, 0)
+    best_percent = (best_amount / total_revenue * 100) if total_revenue else 0
+
+    highest_expense = "Salaries"
+    if expenses:
+        try:
+            highest_expense = max(expenses, key=lambda x: get_amount(x))
+            highest_expense = highest_expense.get('category', highest_expense.get('name', 'Salaries'))
+        except:
+            pass
+
     return {
         "total_revenue": total_revenue,
         "total_expenses": total_expenses,
         "profit": profit,
-        "profit_margin": round(margin, 2),
-        "cash_flow": cash_flow,
-        "best_seller": {"product": best_prod, "amount": best_amt},
-        "highest_expense": {"category": high_cat, "amount": high_amt},
+        "profit_margin": profit_margin,
+        "best_seller": best_product,
+        "best_seller_amount": best_amount,
+        "best_seller_percent": best_percent,
+        "highest_expense": highest_expense,
         "total_sales": len(sales)
     }
 
+@app.get("/")
+def home():
+    return {"message": "TradeFlow API live - from Otukpo to the world", "docs": "/docs"}
+
+@app.get("/dashboard")
+def dashboard():
+    summary = get_summary()
+    sales, _ = load_data()
+    cat = {}
+    for s in sales:
+        name = get_product_name(s)
+        cat[name] = cat.get(name, 0) + get_amount(s)
+    return {"financials": summary, "categories": cat}
+
 @app.get("/insights")
 def insights():
-    sales, expenses = load_data()
-    product_sales = calculate_sales_per_product(sales)
-    total_rev = calculate_total_revenue(sales)
-    
-    insights_list = []
-    best_prod, best_amt = best_selling_product(sales)
-    if best_prod:
-        pct = (best_amt / total_rev * 100) if total_rev else 0
-        insights_list.append(f"{best_prod} drives {pct:.1f}% of revenue - consider stocking more")
-    
-    high_cat, high_amt = most_expensive_category(expenses)
-    if high_cat:
-        insights_list.append(f"Highest cost is {high_cat} at {high_amt} - review for savings")
-    
-    return {"insights": insights_list, "product_breakdown": product_sales}
+    s = get_summary()
+    return {
+        "best_seller": f"{s['best_seller']} = {s['best_seller_amount']} ({s['best_seller_percent']:.2f}% of revenue)",
+        "highest_expense": s['highest_expense'],
+        "profit_margin": f"{s['profit_margin']:.2f}%",
+        "advice": f"{s['best_seller']} drives {s['best_seller_percent']:.2f}% - stock more"
+    }
+
+@app.get("/ask")
+def ask(question: str):
+    s = get_summary()
+    q = question.lower()
+    if "stock" in q or "sell" in q or "best" in q:
+        return {"question": question, "answer": f"Stock more {s['best_seller']} - it drives {s['best_seller_percent']:.2f}% of revenue (N{s['best_seller_amount']}).", "data": s}
+    elif "profit" in q:
+        return {"question": question, "answer": f"Profit is N{s['profit']} with {s['profit_margin']:.2f}% margin. Revenue N{s['total_revenue']}. Highest expense {s['highest_expense']}.", "data": s}
+    else:
+        return {"question": question, "answer": f"Revenue N{s['total_revenue']}, Profit N{s['profit']}. Best seller {s['best_seller']}. Ask about stock, profit, or expenses.", "data": s}
