@@ -77,6 +77,8 @@ If ask wetin to stock -> recommend best seller with %. If profit low -> mention 
             return {"question":question,"answer":ans,"data":s,"ai":"groq-llama3-free"}
         except Exception as e:
             print(f"Groq error: {e} falling back")
+            return {"question":question,"answer":f"DEBUG Groq Error: {e}","data":s,"ai":f"groq-error: {e}"}
+           
     # Fallback rules (never fails)
     if any(k in q for k in ["stock","sell","best","wetin"]):
         return {"question":question,"answer":f"Make You Stock Am: {s['best_seller']} - it drives {s['best_seller_percent']:.2f}% of revenue (₦{s['best_seller_amount']}). Na your best seller!","data":s,"ai":"rules"}
