@@ -72,12 +72,11 @@ def ask(question: str):
 Data: Revenue ₦{s['total_revenue']}, Profit ₦{s['profit']} ({s['profit_margin']:.1f}% margin), Expenses ₦{s['total_expenses']}, Sales {s['total_sales']}, Best Seller {s['best_seller']} ₦{s['best_seller_amount']} ({s['best_seller_percent']:.1f}%), Highest Expense {s['highest_expense']}, Products {s['product_breakdown']}
 
 If ask wetin to stock -> recommend best seller with %. If profit low -> mention expenses. Use Naira and Pidgin like 'Na Your Gain', 'Make You Stock Am' when natural."""
-            resp=client.chat.completions.create(model="llama-3.1-8b-instant", messages=[{"role":"system","content":system_prompt},{"role":"user","content":question}], max_tokens=200, temperature=0.7)
+            resp=client.chat.completions.create(model="llama-3.3-70b-versatile", messages=[{"role":"system","content":system_prompt},{"role":"user","content":question}], max_tokens=200, temperature=0.7)
             ans=resp.choices[0].message.content.strip()
             return {"question":question,"answer":ans,"data":s,"ai":"groq-llama3-free"}
         except Exception as e:
             print(f"Groq error: {e} falling back")
-            return {"question":question,"answer":f"DEBUG Groq Error: {e}","data":s,"ai":f"groq-error: {e}"}
            
     # Fallback rules (never fails)
     if any(k in q for k in ["stock","sell","best","wetin"]):
@@ -86,4 +85,3 @@ If ask wetin to stock -> recommend best seller with %. If profit low -> mention 
         return {"question":question,"answer":f"Na Your Gain: Profit ₦{s['profit']} with {s['profit_margin']:.2f}% margin. Revenue ₦{s['total_revenue']}. Highest expense na {s['highest_expense']}.","data":s,"ai":"rules"}
     else:
         return {"question":question,"answer":f"Revenue ₦{s['total_revenue']}, Profit ₦{s['profit']}. Best seller {s['best_seller']} ({s['best_seller_percent']:.1f}%). Ask about wetin to stock or profit.","data":s,"ai":"rules"}
-        
