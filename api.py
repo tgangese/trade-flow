@@ -84,3 +84,4 @@ If ask wetin to stock -> recommend best seller with %. If profit low -> mention 
         return {"question":question,"answer":f"Na Your Gain: Profit ₦{s['profit']} with {s['profit_margin']:.2f}% margin. Revenue ₦{s['total_revenue']}. Highest expense na {s['highest_expense']}.","data":s,"ai":"rules"}
     else:
         return {"question":question,"answer":f"Revenue ₦{s['total_revenue']}, Profit ₦{s['profit']}. Best seller {s['best_seller']} ({s['best_seller_percent']:.1f}%). Ask about wetin to stock or profit.","data":s,"ai":"rules"}
+        
