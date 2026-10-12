@@ -72,7 +72,7 @@ def ask(question: str):
 Data: Revenue ₦{s['total_revenue']}, Profit ₦{s['profit']} ({s['profit_margin']:.1f}% margin), Expenses ₦{s['total_expenses']}, Sales {s['total_sales']}, Best Seller {s['best_seller']} ₦{s['best_seller_amount']} ({s['best_seller_percent']:.1f}%), Highest Expense {s['highest_expense']}, Products {s['product_breakdown']}
 
 If ask wetin to stock -> recommend best seller with %. If profit low -> mention expenses. Use Naira and Pidgin like 'Na Your Gain', 'Make You Stock Am' when natural."""
-            resp=client.chat.completions.create(model="llama-3.3-70b-versatile", messages=[{"role":"system","content":system_prompt},{"role":"user","content":question}], max_tokens=200, temperature=0.7)
+            resp=client.chat.completions.create(model="openai/gpt-oss-120b", messages=[{"role":"system","content":system_prompt},{"role":"user","content":question}], max_tokens=200, temperature=0.7)
             ans=resp.choices[0].message.content.strip()
             return {"question":question,"answer":ans,"data":s,"ai":"groq-llama3-free"}
         except Exception as e:
